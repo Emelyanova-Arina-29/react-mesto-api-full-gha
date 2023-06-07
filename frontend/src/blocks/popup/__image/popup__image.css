@@ -1,0 +1,7 @@
+.popup__image {
+  box-sizing: border-box;
+  object-fit: cover;
+  max-width: 75vw;
+  width: 100%;
+  max-height: 75vh;
+}
