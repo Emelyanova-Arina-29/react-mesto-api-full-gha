@@ -10,9 +10,9 @@ export const validationConfig = {
 };
 
 export const personalData = {
-  url:'https://mesto.nomoreparties.co/v1/cohort-60',
+  url:'http://mesto.arina.nomoredomains.rocks',
   headers: {
-    authorization: 'f1580dcf-100f-4c1e-a333-5ef7b032595f',
+    authorization: `Bearer ${localStorage.getItem('jwt')}`,
     'Content-Type': 'application/json'
   }
 }

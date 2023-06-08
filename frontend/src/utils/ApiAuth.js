@@ -1,4 +1,4 @@
-const BASE_URL = 'https://auth.nomoreparties.co';
+export const BASE_URL = 'http://mesto.arina.nomoredomains.rocks';
 
 const handleResponse = (res) => {
   if (res.ok) {
@@ -26,12 +26,13 @@ const login = (email, password) => {
     .then(handleResponse)
 }
 
-const checkToken = (jwt) => {
+const checkToken = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     headers: {
       "Content-Type": "application/json",
-      "Authorization" : `Bearer ${jwt}`
+      "Authorization" : `Bearer ${token}`
     },
+    method: 'GET',
   })
     .then(handleResponse)
 }
