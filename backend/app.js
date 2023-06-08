@@ -11,6 +11,8 @@ const corsSettings = {
   origin: ['https://mesto.arina.nomoredomains.rocks',
     'http://localhost:3000',
     'http://mesto.arina.nomoredomains.rocks',
+    'http://api.mesto.arina.nomoredomains.rocks',
+    'https://api.mesto.arina.nomoredomains.rocks',
   ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: ['Content-Type', 'Authorization', 'Origin'],
