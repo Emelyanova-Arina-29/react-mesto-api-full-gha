@@ -7,10 +7,11 @@ const {
 
 const userSchema = new mongoose.Schema({
   name: {
+    required: true,
     type: String,
     minlength: 2,
     maxlength: 30,
-    default: 'Жак-Ив Кусто',
+    // default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,

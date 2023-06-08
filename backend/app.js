@@ -4,6 +4,7 @@ const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
 const router = require('./routes/routes');
 const errorsHandler = require('./errors/errorsHandler');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 
@@ -21,7 +22,18 @@ const limiter = rateLimit({
 });
 
 app.use(limiter);
+
+app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
+
 app.use('/', router);
+
+app.use(errorLogger);
 
 app.use(errors());
 
