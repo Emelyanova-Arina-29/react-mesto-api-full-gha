@@ -43,7 +43,7 @@ function Register({ onRegister }) {
           required />
         <button className="auth__button" type="submit" aria-label="Войти">Зарегистрироваться</button>
       </form>
-      <p className="auth__text">Уже зарегистрированы? <Link to="/sign-in" className="auth__link">Войти</Link></p>
+      <p className="auth__text">Уже зарегистрированы? <Link to="/signin" className="auth__link">Войти</Link></p>
     </section>
   );
 }

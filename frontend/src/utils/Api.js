@@ -3,7 +3,6 @@ import { personalData } from './constants.js';
 class Api {
   constructor(data) {
     this._url = data.url;
-    this._headers = data.headers;
   }
 
   /* Обработка ответа сервера */
@@ -20,84 +19,108 @@ class Api {
 
   getCards() {
     return fetch(`${this._url}/cards`, {
-      headers: this._headers
+      headers: {
+        'authorization': `Bearer ${localStorage.getItem("jwt")}`,
+        'Content-Type': 'application/json'
+      }
     })
-      .then(this._handleResponse)
+      .then(res => this._handleResponse(res))
   }
 
   /* Добавление новой карточки */
 
   createCard(data) {
     return fetch(`${this._url}/cards`, {
-      headers: this._headers,
+      headers: {
+        'authorization': `Bearer ${localStorage.getItem("jwt")}`,
+        'Content-Type': 'application/json'
+      },
       method: 'POST',
       body: JSON.stringify({ name: data.name, link: data.link })
     })
-      .then(this._handleResponse)
+      .then(res => this._handleResponse(res))
   }
 
   /* Удаление карточки */
 
   deleteCard(id) {
     return fetch(`${this._url}/cards/${id}`, {
-      headers: this._headers,
+      headers: {
+        'authorization': `Bearer ${localStorage.getItem("jwt")}`,
+        'Content-Type': 'application/json'
+      },
       method: 'DELETE',
     })
-      .then(this._handleResponse)
+      .then(res => this._handleResponse(res))
   }
 
   /* Добавление лайка карточке */
 
   addLikeCard(cardId) {
     return fetch(`${this._url}/cards/${cardId}/likes`, {
-      headers: this._headers,
+      headers: {
+        'authorization': `Bearer ${localStorage.getItem("jwt")}`,
+        'Content-Type': 'application/json'
+      },
       method: 'PUT',
     })
-      .then(this._handleResponse)
+      .then(res => this._handleResponse(res))
   }
 
   /* Убрать лайк с карточки */
 
   deleteLikeCard(id) {
     return fetch(`${this._url}/cards/${id}/likes`, {
-      headers: this._headers,
+      headers: {
+        'authorization': `Bearer ${localStorage.getItem("jwt")}`,
+        'Content-Type': 'application/json'
+      },
       method: 'DELETE',
     })
-      .then(this._handleResponse)
+      .then(res => this._handleResponse(res))
   }
 
   /* Загрузка информации о пользователе */
 
   getUserInfo() {
     return fetch(`${this._url}/users/me`, {
-      headers: this._headers
+      headers: {
+        'authorization': `Bearer ${localStorage.getItem('jwt')}`,
+        'Content-Type': 'application/json'
+      },
     })
-      .then(this._handleResponse)
+      .then(res => this._handleResponse(res))
   }
 
   /* Редактирование профиля */
 
   editUserInfo(data) {
     return fetch(`${this._url}/users/me`, {
-      headers: this._headers,
+      headers: {
+        'authorization': `Bearer ${localStorage.getItem("jwt")}`,
+        'Content-Type': 'application/json'
+      },
       method: 'PATCH',
       body: JSON.stringify({
 				name: data.name,
 				about: data.about
 			})
     })
-      .then(this._handleResponse)
+      .then(res => this._handleResponse(res))
   }
   
   /* Изменение аватара пользователя */
 
   editUserAvatar(data) {
     return fetch(`${this._url}/users/me/avatar`, {
-      headers: this._headers,
+      headers: {
+        'authorization': `Bearer ${localStorage.getItem("jwt")}`,
+        'Content-Type': 'application/json'
+      },
       method: 'PATCH',
       body: JSON.stringify({ avatar: data.avatar })
     })
-      .then(this._handleResponse)
+      .then(res => this._handleResponse(res))
   }
 }
 

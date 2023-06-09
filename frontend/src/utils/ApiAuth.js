@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://mesto.arina.nomoredomains.rocks';
+export const BASE_URL = 'http://api.mesto.arina.nomoredomains.rocks';
 
 const handleResponse = (res) => {
   if (res.ok) {
@@ -10,9 +10,11 @@ const handleResponse = (res) => {
 
 const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
-    headers: { "Content-Type": "application/json" },
+    headers: { 
+      "Content-Type": "application/json",
+    },
     method: 'POST',
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({ email, password }),
   })
     .then(handleResponse)
 }

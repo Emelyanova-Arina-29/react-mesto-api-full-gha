@@ -10,9 +10,5 @@ export const validationConfig = {
 };
 
 export const personalData = {
-  url:'http://mesto.arina.nomoredomains.rocks',
-  headers: {
-    authorization: `Bearer ${localStorage.getItem('jwt')}`,
-    'Content-Type': 'application/json'
-  }
+  url:'http://api.mesto.arina.nomoredomains.rocks',
 }

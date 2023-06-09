@@ -25,11 +25,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
     React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState(null);
-  const [currentUser, setCurrentUser] = useState({
-    name: "",
-    about: "",
-    avatar: "",
-  });
+  const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
@@ -45,13 +41,18 @@ function App() {
   // Регистрация
 
   function handleRegister(email, password) {
+    console.log(email, password)
     register(email, password)
-      .then(() => {
-        setPopupStatus({
-          image: imageCheckmark,
-          message: "Вы успешно зарегистрировались!",
-        });
-        navigate("/sign-in");
+      .then((res) => {
+        if (res) {
+          setPopupStatus({
+            image: imageCheckmark,
+            message: "Вы успешно зарегистрировались!",
+          });
+          navigate("/signin");
+          setIsLoggedIn(true);
+          setIsEmailValue(res.email);
+        }
       })
       .catch(() => {
         setPopupStatus({
@@ -67,9 +68,10 @@ function App() {
   function handleLogin(email, password) {
     login(email, password)
       .then((res) => {
+        console.log(res.token);
+        setIsLoggedIn(true);
         localStorage.setItem("jwt", res.token);
         setIsEmailValue(email);
-        setIsLoggedIn(true);
         navigate("/");
       })
       .catch(() => {
@@ -87,18 +89,19 @@ function App() {
     localStorage.removeItem("jwt");
     setIsEmailValue("");
     setIsLoggedIn(false);
-    navigate("sign-in");
+    setCards([]);
+    navigate("signin");
   }
 
   // Проверка токена
 
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
+    const jwt = `${localStorage.getItem("jwt")}`;
     if (jwt) {
       checkToken(jwt)
         .then((res) => {
           if (res) {
-            setIsEmailValue(res.data.email);
+            setIsEmailValue(res.email);
             setIsLoggedIn(true);
             navigate("/");
           }
@@ -110,9 +113,9 @@ function App() {
   useEffect(() => {
     if (isLoggedIn) {
       Promise.all([api.getUserInfo(), api.getCards()])
-        .then(([userData, cards]) => {
+        .then((userData, cards) => {
           setCurrentUser(userData);
-          setCards(cards);
+          setCards(cards.data);
         })
         .catch((err) => console.log(`Произошла ошибка: ${err}`));
     }
@@ -127,14 +130,14 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i === currentUser._id);
 
     if (!isLiked) {
       api
         .addLikeCard(card._id)
         .then((newCard) => {
           setCards((state) =>
-            state.map((c) => (c._id === card._id ? newCard : c))
+            state.map((c) => (c._id === card.data._id ? newCard.data : c))
           );
         })
         .catch((err) => {
@@ -145,7 +148,7 @@ function App() {
         .deleteLikeCard(card._id)
         .then((newCard) => {
           setCards((state) =>
-            state.map((c) => (c._id === card._id ? newCard : c))
+            state.map((c) => (c._id === card.data._id ? newCard.data : c))
           );
         })
         .catch((err) => {
@@ -233,19 +236,19 @@ function App() {
               }
             />
             <Route
-              path="/sign-up"
+              path="/signup"
               element={
                 <>
-                  <Header title="Войти" route="/sign-in" />
+                  <Header title="Войти" route="/signin" />
                   <Register onRegister={handleRegister} />
                 </>
               }
             />
             <Route
-              path="/sign-in"
+              path="/signin"
               element={
                 <>
-                  <Header title="Регистрация" route="/sign-up" />
+                  <Header title="Регистрация" route="/signup" />
                   <Login onLogin={handleLogin} />
                 </>
               }
@@ -253,7 +256,7 @@ function App() {
             <Route
               path="*"
               element={
-                isLoggedIn ? <Navigate to="/" /> : <Navigate to="/sign-in" />
+                isLoggedIn ? <Navigate to="/" /> : <Navigate to="/signin" />
               }
             />
           </Routes>

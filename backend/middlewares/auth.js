@@ -6,7 +6,7 @@ const {
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
-
+  console.log(req.headers);
   if (!authorization || !authorization.startsWith('Bearer ')) {
     throw new AuthError('Необходима авторизация');
   }

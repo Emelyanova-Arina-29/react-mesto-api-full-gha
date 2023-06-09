@@ -21,8 +21,8 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike
         <button className="profile__add" type="button" aria-label="Добавить карточку" onClick={onAddPlace} ></button>
       </section>
       <section className="cards">
-        {cards.map((card => {
-          return (<Card card={card}
+        {cards.map((card => 
+                    (<Card card={card}
                         key={card._id}
                         name={card.name}
                         link={card.link}
@@ -31,7 +31,7 @@ function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, onCardLike
                         onCardLike={onCardLike}
                         onCardDelete={onCardDelete}
                         />)
-        }))}
+        ))}
       </section>
     </main>
   );
