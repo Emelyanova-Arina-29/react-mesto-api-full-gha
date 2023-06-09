@@ -68,10 +68,9 @@ function App() {
   function handleLogin(email, password) {
     login(email, password)
       .then((res) => {
-        console.log(res.token);
-        setIsLoggedIn(true);
         localStorage.setItem("jwt", res.token);
-        setIsEmailValue(email);
+        setIsEmailValue(res.email);
+        setIsLoggedIn(true);
         navigate("/");
       })
       .catch(() => {
@@ -96,7 +95,7 @@ function App() {
   // Проверка токена
 
   useEffect(() => {
-    const jwt = `${localStorage.getItem("jwt")}`;
+    const jwt = localStorage.getItem("jwt");
     if (jwt) {
       checkToken(jwt)
         .then((res) => {
@@ -113,9 +112,9 @@ function App() {
   useEffect(() => {
     if (isLoggedIn) {
       Promise.all([api.getUserInfo(), api.getCards()])
-        .then((userData, cards) => {
+        .then(([userData, card]) => {
           setCurrentUser(userData);
-          setCards(cards.data);
+          setCards(card.cards);
         })
         .catch((err) => console.log(`Произошла ошибка: ${err}`));
     }
@@ -130,14 +129,14 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i === currentUser._id);
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     if (!isLiked) {
       api
         .addLikeCard(card._id)
         .then((newCard) => {
           setCards((state) =>
-            state.map((c) => (c._id === card.data._id ? newCard.data : c))
+            state.map((c) => (c._id === card._id ? newCard : c))
           );
         })
         .catch((err) => {
@@ -148,7 +147,7 @@ function App() {
         .deleteLikeCard(card._id)
         .then((newCard) => {
           setCards((state) =>
-            state.map((c) => (c._id === card.data._id ? newCard.data : c))
+            state.map((c) => (c._id === card._id ? newCard : c))
           );
         })
         .catch((err) => {
@@ -236,19 +235,19 @@ function App() {
               }
             />
             <Route
-              path="/signup"
+              path="/sign-up"
               element={
                 <>
-                  <Header title="Войти" route="/signin" />
+                  <Header title="Войти" route="/sign-in" />
                   <Register onRegister={handleRegister} />
                 </>
               }
             />
             <Route
-              path="/signin"
+              path="/sign-in"
               element={
                 <>
-                  <Header title="Регистрация" route="/signup" />
+                  <Header title="Регистрация" route="/sign-up" />
                   <Login onLogin={handleLogin} />
                 </>
               }
@@ -256,7 +255,7 @@ function App() {
             <Route
               path="*"
               element={
-                isLoggedIn ? <Navigate to="/" /> : <Navigate to="/signin" />
+                isLoggedIn ? <Navigate to="/" /> : <Navigate to="/sign-in" />
               }
             />
           </Routes>
