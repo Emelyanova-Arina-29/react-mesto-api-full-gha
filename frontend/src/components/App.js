@@ -41,7 +41,6 @@ function App() {
   // Регистрация
 
   function handleRegister(email, password) {
-    console.log(email, password)
     register(email, password)
       .then((res) => {
         if (res) {
@@ -49,7 +48,6 @@ function App() {
             image: imageCheckmark,
             message: "Вы успешно зарегистрировались!",
           });
-         // setIsEmailValue(res.email);
           navigate("/signin");
         }
       })
@@ -112,14 +110,12 @@ function App() {
     if (isLoggedIn) {
       api.getUserInfo()
         .then(({ user }) => {
-          console.log(user);
           setCurrentUser(user);
         })
         .catch((err) => console.log(`Произошла ошибка: ${err}`));
     api.getCards()
       .then((card) => {
         setCards(card.cards.reverse());
-        console.log(card.cards.likes)
       })
       .catch((err) => console.log(`Произошла ошибка: ${err}`));
       }
@@ -141,9 +137,8 @@ function App() {
       api
         .addLikeCard(card._id)
         .then((newCard) => {
-          console.log(newCard, 'like')
           setCards((state) => {
-            return state.map((c) => (c._id === card._id ? { ...newCard.card, owner: currentUser } : c))}
+            return state.map((c) => (c._id === card._id ? newCard.card : c))}
           );
         })
         .catch((err) => {
@@ -153,9 +148,8 @@ function App() {
       api
         .deleteLikeCard(card._id)
         .then((newCard) => {
-          console.log(newCard, 'delete')
           setCards((state) =>
-            state.map((c) => (c._id === card._id ? { ...newCard.card, owner: currentUser } : c))
+            state.map((c) => (c._id === card._id ? newCard.card : c))
           );
         })
         .catch((err) => {
@@ -203,7 +197,6 @@ function App() {
     api
       .createCard(data)
       .then(({ card }) => {
-        console.log(card, 'addCard')
         setCards([{ ...card, owner: currentUser }, ...cards]);
         closeAllPopups();
       })
