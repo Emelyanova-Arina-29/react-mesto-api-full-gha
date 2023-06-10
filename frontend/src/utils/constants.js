@@ -10,5 +10,5 @@ export const validationConfig = {
 };
 
 export const personalData = {
-  url:'http://api.mesto.arina.nomoredomains.rocks',
+  url:'https://api.mesto.arina.nomoredomains.rocks',
 }

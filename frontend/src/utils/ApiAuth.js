@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://api.mesto.arina.nomoredomains.rocks';
+export const BASE_URL = 'https://api.mesto.arina.nomoredomains.rocks';
 
 const handleResponse = (res) => {
   if (res.ok) {
