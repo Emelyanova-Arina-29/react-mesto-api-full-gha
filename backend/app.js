@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const { errors } = require('celebrate');
@@ -22,15 +23,16 @@ const corsSettings = {
   optionsSuccessStatus: 204,
 };
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
 const app = express();
 
 app.use(cors(corsSettings));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(helmet());
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb', {
+mongoose.connect(DB_URL, {
   useNewUrlParser: true,
 });
 
