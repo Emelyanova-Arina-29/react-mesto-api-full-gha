@@ -111,14 +111,14 @@ class Api {
   
   /* Изменение аватара пользователя */
 
-  editUserAvatar(avatar) {
+  editUserAvatar(data) {
     return fetch(`${this._url}/users/me/avatar`, {
       headers: {
         'authorization': `Bearer ${localStorage.getItem("jwt")}`,
         'Content-Type': 'application/json'
       },
       method: 'PATCH',
-      body: JSON.stringify({ avatar: avatar })
+      body: JSON.stringify({ avatar: data.avatar })
     })
       .then(res => this._handleResponse(res))
   }

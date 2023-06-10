@@ -100,7 +100,7 @@ function App() {
       checkToken(jwt)
         .then((res) => {
           if (res) {
-            setIsEmailValue(res.email);
+            setIsEmailValue(res.user.email);
             setIsLoggedIn(true);
             navigate("/");
           }
@@ -112,14 +112,15 @@ function App() {
   useEffect(() => {
     if (isLoggedIn) {
       api.getUserInfo()
-        .then(({ userData }) => {
-          setCurrentUser({ userData });
+        .then(({ user }) => {
+          console.log(user);
+          setCurrentUser(user);
         })
         .catch((err) => console.log(`Произошла ошибка: ${err}`));
     api.getCards()
-      .then((cards) => {
-        setCards(cards.card);
-        console.log(cards.card.likes)
+      .then((card) => {
+        setCards(card.cards.reverse());
+        console.log(card.cards.likes)
       })
       .catch((err) => console.log(`Произошла ошибка: ${err}`));
       }
@@ -134,14 +135,16 @@ function App() {
   }
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+
+    const isLiked = card.likes.some((i) => i === currentUser._id);
 
     if (!isLiked) {
       api
         .addLikeCard(card._id)
         .then((newCard) => {
-          setCards((state) =>
-            state.map((c) => (c._id === card._id ? newCard : c))
+          console.log(newCard, 'like')
+          setCards((state) => {
+            return state.map((c) => (c._id === card._id ? newCard.card : c))}
           );
         })
         .catch((err) => {
@@ -151,8 +154,9 @@ function App() {
       api
         .deleteLikeCard(card._id)
         .then((newCard) => {
+          console.log(newCard, 'delete')
           setCards((state) =>
-            state.map((c) => (c._id === card._id ? newCard : c))
+            state.map((c) => (c._id === card._id ? newCard.card : c))
           );
         })
         .catch((err) => {
@@ -175,8 +179,8 @@ function App() {
   function handleUpdateUser(data) {
     api
       .editUserInfo(data)
-      .then((user) => {
-        setCurrentUser({ user });
+      .then(({ user }) => {
+        setCurrentUser(user);
         closeAllPopups();
       })
       .catch((err) => {
@@ -187,7 +191,7 @@ function App() {
   function handleUpdateAvatar(data) {
     api
       .editUserAvatar(data)
-      .then((user) => {
+      .then(({ user }) => {
         setCurrentUser(user);
         closeAllPopups();
       })
@@ -199,8 +203,9 @@ function App() {
   function handleAddPlaceSubmit(data) {
     api
       .createCard(data)
-      .then((newCard) => {
-        setCards([newCard, ...cards]);
+      .then(({ card }) => {
+        console.log(card, 'addCard')
+        setCards([card, ...cards]);
         closeAllPopups();
       })
       .catch((err) => {
