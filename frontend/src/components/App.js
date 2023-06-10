@@ -108,17 +108,22 @@ function App() {
         .catch((err) => console.log(`Произошла ошибка: ${err}`));
     }
   }, [navigate]);
-
+  
   useEffect(() => {
     if (isLoggedIn) {
-      Promise.all([api.getUserInfo(), api.getCards()])
-        .then(([userData, card]) => {
-          setCurrentUser(userData);
-          setCards(card.cards);
+      api.getUserInfo()
+        .then(({ userData }) => {
+          setCurrentUser({ userData });
         })
         .catch((err) => console.log(`Произошла ошибка: ${err}`));
-    }
-  }, [isLoggedIn]);
+    api.getCards()
+      .then((cards) => {
+        setCards(cards.card);
+        console.log(cards.card.likes)
+      })
+      .catch((err) => console.log(`Произошла ошибка: ${err}`));
+      }
+}, [isLoggedIn]);
 
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
@@ -171,7 +176,7 @@ function App() {
     api
       .editUserInfo(data)
       .then((user) => {
-        setCurrentUser(user);
+        setCurrentUser({ user });
         closeAllPopups();
       })
       .catch((err) => {
