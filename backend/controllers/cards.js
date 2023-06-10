@@ -15,7 +15,7 @@ module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
-    .then((card) => res.status(HTTP_STATUS_CREATED).send({ card: { ...card, owner: req.user } }))
+    .then((card) => res.status(HTTP_STATUS_CREATED).send({ card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при создании карточки'));
@@ -61,7 +61,6 @@ module.exports.likeCard = (req, res, next) => {
     { new: true },
   )
     .then((card) => {
-      console.log(card);
       if (!card) {
         return next(new NotFoundError('Карточка с данным _id не обнаружена'));
       }

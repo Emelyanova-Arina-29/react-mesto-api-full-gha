@@ -205,7 +205,7 @@ function App() {
       .createCard(data)
       .then(({ card }) => {
         console.log(card, 'addCard')
-        setCards([card, ...cards]);
+        setCards([{ ...card, owner: currentUser }, ...cards]);
         closeAllPopups();
       })
       .catch((err) => {
