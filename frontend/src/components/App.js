@@ -49,9 +49,8 @@ function App() {
             image: imageCheckmark,
             message: "Вы успешно зарегистрировались!",
           });
+         // setIsEmailValue(res.email);
           navigate("/signin");
-          setIsLoggedIn(true);
-          setIsEmailValue(res.email);
         }
       })
       .catch(() => {
@@ -107,7 +106,7 @@ function App() {
         })
         .catch((err) => console.log(`Произошла ошибка: ${err}`));
     }
-  }, [navigate]);
+  }, []);
   
   useEffect(() => {
     if (isLoggedIn) {
@@ -144,7 +143,7 @@ function App() {
         .then((newCard) => {
           console.log(newCard, 'like')
           setCards((state) => {
-            return state.map((c) => (c._id === card._id ? newCard.card : c))}
+            return state.map((c) => (c._id === card._id ? { ...newCard.card, owner: currentUser } : c))}
           );
         })
         .catch((err) => {
@@ -156,7 +155,7 @@ function App() {
         .then((newCard) => {
           console.log(newCard, 'delete')
           setCards((state) =>
-            state.map((c) => (c._id === card._id ? newCard.card : c))
+            state.map((c) => (c._id === card._id ? { ...newCard.card, owner: currentUser } : c))
           );
         })
         .catch((err) => {
